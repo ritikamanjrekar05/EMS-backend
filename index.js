@@ -17,7 +17,7 @@ import {rateLimit} from "express-rate-limit"
 
 
 const app = express()
-dotenv.config
+dotenv.config()
 
 
 const rateLimiter = rateLimit({
@@ -29,13 +29,15 @@ const rateLimiter = rateLimit({
 });
 
 
-
-app.use(express.json())
-const PORT = process.env.PORT || 5000
 app.use(cors({
     origin: "https://ems-frontend-project.vercel.app",
     credentials: true
 }));
+
+
+app.use(express.json())
+const PORT = process.env.PORT || 5000
+
 
 app.get("/",(req,res)=>{
   res.json({msg:"isha"})
