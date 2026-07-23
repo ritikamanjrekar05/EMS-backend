@@ -1,3 +1,7 @@
+import dns from "node:dns"
+dns.setServers(['8.8.8.8','8.8.4.4']);
+dns.setDefaultResultOrder("ipv4first")
+
 import express from "express"
 import "./src/config/db.js"
 import dotenv from "dotenv"
@@ -9,6 +13,7 @@ import empRout from "./src/routes/employee.router.js"
 import cors from "cors"
 import errorHandler from "./src/middleware/errorHandler.js"
 import {rateLimit} from "express-rate-limit"
+
 
 
 const app = express()
@@ -34,8 +39,9 @@ app.use("/api/auth",authRouter)
 app.use("/api/dept",deptRouter)
 app.use("/api/state",stateRout)
 app.use("/api/city",cityRout)
-app.use("/api/emp",empRout)
+
 app.use("/uploads",express.static("src/uploads"))
+app.use("/api/emp",empRout)
 app.use(errorHandler);
 app.listen(PORT,()=>{
     console.log(`server is successfully running on http://localhost:${PORT}`)
