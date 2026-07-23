@@ -33,7 +33,9 @@ const rateLimiter = rateLimit({
 app.use(express.json())
 const PORT = process.env.PORT || 5000
 app.use(cors())
-
+app.get("/",(req,res)=>{
+  res.json({msg:"isha"})
+})
 
 app.use("/api/auth",authRouter)
 app.use("/api/dept",deptRouter)
