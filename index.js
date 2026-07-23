@@ -32,7 +32,11 @@ const rateLimiter = rateLimit({
 
 app.use(express.json())
 const PORT = process.env.PORT || 5000
-app.use(cors())
+app.use(cors({
+    origin: "https://ems-frontend-project.vercel.app",
+    credentials: true
+}));
+
 app.get("/",(req,res)=>{
   res.json({msg:"isha"})
 })
