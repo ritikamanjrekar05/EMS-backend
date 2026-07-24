@@ -29,10 +29,7 @@ const rateLimiter = rateLimit({
 });
 
 
-app.use(cors({
-    origin: "https://ems-frontend-project.vercel.app",
-    credentials: true
-}));
+app.use(cors());
 
 
 app.use(express.json())
