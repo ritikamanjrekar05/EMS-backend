@@ -19,20 +19,57 @@ export const register = asyncHandler(async(req,res)=>{
     }
 )
 
-export const login = asyncHandler(async(req,res)=>{
-        const {email,password}= req.body
-        const users = await User.findOne({email})
-        console.log("user Query complelte")
-        if(!users){
-            return res.status(404).json({ msg:"User not found"})
-        }
-         const isMatch = await bcrypt.compare(password, users.password)
-        if(!isMatch){
-            return res.status(401).json("authentication failed")
-        }
-        const token = jwt.sign({userId: users._id, email:users.email}, process.env.JWT_SECRET_KEY,{
-            expiresIn:"7d",
-        })
-            return res.status(200).json({msg:"user login successfully", email:{email},token})
+export const login = asyncHandler(async (req, res) => {
+  try {
+    console.log("LOGIN API HIT");
+
+    const { email, password } = req.body;
+
+    console.log("Email received:", email);
+
+    const user = await User.findOne({ email }).maxTimeMS(5000);
+
+    console.log("User found:", user ? "YES" : "NO");
+
+    if (!user) {
+      return res.status(400).json({
+        message: "Invalid credentials",
+      });
     }
-)
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    console.log("Password checked");
+
+    if (!isMatch) {
+      return res.status(400).json({
+        message: "Invalid credentials",
+      });
+    }
+
+    const token = jwt.sign(
+      {
+        id: user._id,
+        email: user.email,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "7d",
+      }
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Login successful",
+      token,
+    });
+
+  } catch (error) {
+    console.log("LOGIN ERROR:", error.message);
+
+    return res.status(500).json({
+      message: "Server error",
+      error: error.message,
+    });
+  }
+});
